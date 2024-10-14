@@ -21,7 +21,9 @@ function renderBooks(books) {
         alt="${book.title}"
         class="book-cover"
       />
-      <h2 class="book-title">${book.title}</h2>
+      <a href="/book.html?id=${book.id}">
+        <h2 class="book-title">${book.title}</h2>
+      </a>
       <div class="book-details">
         <p>Book ID: ${book.id}</p>
         <p>Genre: Fantasy</p>
