@@ -1,0 +1,32 @@
+.book-detail-cover-wrapper {
+  height: 600px;
+  margin-bottom: 1rem;
+}
+
+.book-detail-cover-wrapper img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.book-details > * {
+  margin-bottom: 1rem;
+}
+
+.book-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.book-details-wrapper h3 {
+  margin-bottom: 0.5rem;
+}
+
+.book-details-wrapper ul li::before {
+  content: "\2022";
+  color: var(--color-orange);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+}
