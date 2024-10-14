@@ -3,3 +3,120 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+:root {
+  --color-orange: #ff6600;
+  --color-black: #000;
+  --color-white: #fff;
+}
+
+/* Global */
+section {
+  padding: 1.5rem 0;
+}
+
+img {
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+input,
+select {
+  outline: none;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 1rem;
+}
+
+/* Header */
+header {
+  padding: 1.5rem 0;
+  background-color: #f4f4f4;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-nav-ul {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-nav-ul li a {
+  font-weight: 500;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.search-wrapper .search-input {
+  width: 400px;
+  padding-right: 7.2rem;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
+
+.search-wrapper .search-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem;
+  border-radius: 0 0.3rem 0.3rem 0;
+  background-color: var(--color-orange);
+  color: var(--color-white);
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Button */
+.btn {
+  display: inline-block;
+  background: #f4f4f4;
+  color: #333;
+  padding: 0.7rem 1.3rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.3rem;
+}
+
+.btn-primary {
+  background: var(--color-orange);
+  color: var(--color-white);
+}
+
+/* Input */
+input {
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  outline: none;
+}
