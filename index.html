@@ -7,8 +7,50 @@
       content="width=device-width, initial-scale=1.0"
     />
     <title>Book Gallery | Home</title>
+    <link
+      rel="stylesheet"
+      href="./css/index.css"
+    />
   </head>
   <body>
-    <h1>Welcome</h1>
+    <header>
+      <div class="container">
+        <nav class="header-nav">
+          <a href="/index.html">
+            <h3>Books Gallery</h3>
+          </a>
+          <form
+            class="search-wrapper"
+            id="search-form"
+          >
+            <input
+              type="text"
+              name="search"
+              id="search-input"
+              placeholder="Search..."
+              class="search-input"
+            />
+            <button
+              id="search-btn"
+              class="search-btn"
+              type="submit"
+            >
+              Search Book
+            </button>
+          </form>
+          <ul class="header-nav-ul">
+            <li>
+              <a href="/index.html">Home</a>
+            </li>
+            <li>
+              <a href="/wishlist.html">Wishlist</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Scripts -->
+    <script src="./js/index.js"></script>
   </body>
 </html>
