@@ -1,5 +1,8 @@
 const bookWrapper = document.querySelector(".books-list-wrapper");
 const bookFilter = document.querySelector("#topic-filter");
+const searchForm = document.querySelector("#search-form");
+const searchInput = document.querySelector("#search-input");
+const searchBtn = document.querySelector("#search-btn");
 const loadingIndicator = document.getElementById("loader");
 
 // Render Books
@@ -50,6 +53,35 @@ async function filterBooks() {
 }
 
 bookFilter.addEventListener("change", filterBooks);
+
+// Search Books
+searchForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const searchValue = searchInput.value.trim();
+
+  if (!searchValue) {
+    return;
+  }
+
+  console.log(searchValue);
+
+  // Show Loading
+  loadingIndicator.style.display = "block";
+
+  // Clear Books
+  bookWrapper.innerHTML = "";
+
+  const baseUrl = `https://gutendex.com/books?search=${searchValue}`;
+  const response = fetch(baseUrl);
+  response
+    .then((response) => response.json())
+    .then((data) => {
+      loadingIndicator.style.display = "none";
+
+      renderBooks(data.results);
+    });
+});
 
 const response = fetch(
   "https://gutendex.com/books?page=1&language=en&per_page=10"
