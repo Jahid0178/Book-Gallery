@@ -53,7 +53,29 @@
     <main>
       <section>
         <div class="container">
+          <div class="section-header">
+            <h2>Books List</h2>
+            <select
+              name="topic"
+              id="topic-filter"
+            >
+              <option value="science">Science</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="romance">Romance</option>
+              <option value="children">Children</option>
+              <option value="adult">Adult</option>
+            </select>
+          </div>
           <div class="books-list-wrapper"></div>
+
+          <!-- Loader -->
+          <div
+            class="loader"
+            style="display: none"
+            id="loader"
+          >
+            Books Loading...
+          </div>
         </div>
       </section>
     </main>
