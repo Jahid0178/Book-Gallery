@@ -3,16 +3,19 @@ const bookFilter = document.querySelector("#topic-filter");
 const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#search-input");
 const searchBtn = document.querySelector("#search-btn");
+const addToWishlistBtn = document.querySelector("#wishlist-btn");
 const loadingIndicator = document.getElementById("loader");
 
 // Render Books
 function renderBooks(books) {
   books.forEach((book) => {
-    const bookLink = document.createElement("a");
-    bookLink.href = `./book.html/${book.id}`;
     const bookCard = document.createElement("div");
     bookCard.classList.add("book-card");
+    bookCard.setAttribute("data-id", book.id);
     bookCard.innerHTML = `
+      <div class="card-action-wrapper">
+        <button class="btn btn-secondary wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+      </div>
       <img
         src="${book.formats["image/jpeg"]}"
         alt="${book.title}"
@@ -27,8 +30,7 @@ function renderBooks(books) {
         <p>Author: ${book.authors[0]?.name || "Unknown"}</p>
       </div>
     `;
-    bookLink.appendChild(bookCard);
-    bookWrapper.appendChild(bookLink);
+    bookWrapper.appendChild(bookCard);
   });
 }
 
@@ -83,12 +85,45 @@ searchForm.addEventListener("submit", (e) => {
     });
 });
 
-const response = fetch(
-  "https://gutendex.com/books?page=1&language=en&per_page=10"
-);
+// Add to Wishlist
+function addToWishlist(bookId, wishlistBtn) {
+  const existingWishlist = JSON.parse(localStorage.getItem("wishlists")) || [];
 
-response
-  .then((response) => response.json())
-  .then((data) => {
-    renderBooks(data.results);
-  });
+  if (existingWishlist.includes(bookId)) {
+    // removed from local storange
+    const index = existingWishlist.indexOf(bookId);
+    existingWishlist.splice(index, 1);
+    localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
+
+    wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+    return;
+  }
+
+  existingWishlist.push(bookId);
+  localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
+  wishlistBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
+}
+
+bookWrapper.addEventListener("click", (e) => {
+  const addToWishlistBtn = e.target.closest(".wishlist-btn");
+
+  if (addToWishlistBtn) {
+    const bookCard = addToWishlistBtn.closest(".book-card");
+    const bookId = bookCard.getAttribute("data-id");
+
+    addToWishlist(bookId, addToWishlistBtn);
+  }
+});
+
+// Init App
+(async function init() {
+  loadingIndicator.style.display = "block";
+
+  const response = await fetch(
+    "https://gutendex.com/books?page=1&language=en&per_page=10"
+  );
+
+  const data = await response.json();
+  renderBooks(data.results);
+  loadingIndicator.style.display = "none";
+})();
