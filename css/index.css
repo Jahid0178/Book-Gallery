@@ -13,6 +13,7 @@ body {
   --color-orange: #ff6600;
   --color-black: #000;
   --color-white: #fff;
+  --color-secondary: #c4d7ff;
 }
 
 /* Global */
@@ -113,6 +114,11 @@ header {
   color: var(--color-white);
 }
 
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-black);
+}
+
 /* Input */
 input {
   padding: 0.7rem 1rem;
@@ -140,6 +146,13 @@ input {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 0.3rem;
+  position: relative;
+}
+
+.book-card .card-action-wrapper {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 .book-card .book-cover {
@@ -166,4 +179,26 @@ input {
 .loader {
   text-align: center;
   font-size: 1.2rem;
+}
+
+/* Media Queries For Responsive */
+@media only screen and (max-width: 768px) {
+  .header-nav {
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .search-wrapper .search-input {
+    width: 100%;
+  }
+
+  .books-list-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .books-list-wrapper {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
