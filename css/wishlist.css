@@ -30,6 +30,18 @@
   align-items: center;
 }
 
+.wishlist-wrapper .wishlist-item .wishlist-details-wrapper h2 {
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.wishlist-wrapper .wishlist-item .wishlist-details-wrapper h2:hover {
+  color: var(--color-primary);
+}
+
 .remove-btn {
   padding: 0.5rem 1rem;
   cursor: pointer;
