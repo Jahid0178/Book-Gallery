@@ -5,6 +5,10 @@ const searchInput = document.querySelector("#search-input");
 const searchBtn = document.querySelector("#search-btn");
 const addToWishlistBtn = document.querySelector("#wishlist-btn");
 const loadingIndicator = document.getElementById("loader");
+const prevBtn = document.querySelector("#prev-btn");
+const nextBtn = document.querySelector("#next-btn");
+
+let currentPage = 1;
 
 // Render Books
 function renderBooks(books) {
@@ -33,6 +37,7 @@ function renderBooks(books) {
       </div>
     `;
     bookWrapper.appendChild(bookCard);
+    prevBtn.disabled = currentPage === 1;
   });
 }
 
@@ -117,8 +122,45 @@ bookWrapper.addEventListener("click", (e) => {
   }
 });
 
+// Pagination
+prevBtn.addEventListener("click", async () => {
+  if (currentPage > 1) {
+    currentPage--;
+  }
+
+  bookWrapper.innerHTML = "";
+
+  loadingIndicator.style.display = "block";
+
+  const response = await fetch(
+    `https://gutendex.com/books?page=${currentPage}`
+  );
+  const data = await response.json();
+
+  loadingIndicator.style.display = "none";
+
+  renderBooks(data.results);
+});
+
+nextBtn.addEventListener("click", async () => {
+  currentPage++;
+
+  bookWrapper.innerHTML = "";
+
+  loadingIndicator.style.display = "block";
+
+  const response = await fetch(
+    `https://gutendex.com/books?page=${currentPage}`
+  );
+  const data = await response.json();
+
+  loadingIndicator.style.display = "none";
+
+  renderBooks(data.results);
+});
+
 // Init App
-(async function init() {
+async function init() {
   loadingIndicator.style.display = "block";
 
   const response = await fetch(
@@ -128,4 +170,6 @@ bookWrapper.addEventListener("click", (e) => {
   const data = await response.json();
   renderBooks(data.results);
   loadingIndicator.style.display = "none";
-})();
+}
+
+init();
