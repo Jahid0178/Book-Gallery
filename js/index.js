@@ -2,13 +2,40 @@ const bookWrapper = document.querySelector(".books-list-wrapper");
 const bookFilter = document.querySelector("#topic-filter");
 const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#search-input");
-const searchBtn = document.querySelector("#search-btn");
-const addToWishlistBtn = document.querySelector("#wishlist-btn");
 const loadingIndicator = document.getElementById("loader");
 const prevBtn = document.querySelector("#prev-btn");
 const nextBtn = document.querySelector("#next-btn");
 
 let currentPage = 1;
+
+function toggleLoading(show) {
+  loadingIndicator.style.display = show ? "block" : "none";
+}
+
+// Reusable function to fetch and render books
+async function fetchBooks(page = 1, query = "") {
+  try {
+    // Show loading indicator and clear the previous books
+    toggleLoading(true);
+    bookWrapper.innerHTML = "";
+
+    // Fetch data from API
+    const baseUrl = `https://gutendex.com/books?page=${page}${query}`;
+    const response = await fetch(baseUrl);
+    const data = await response.json();
+
+    // Hide loading indicator and render books
+    toggleLoading(false);
+    renderBooks(data.results);
+
+    // Enable/Disable buttons based on the current page
+    prevBtn.disabled = page === 1;
+    nextBtn.disabled = data.results.length === 0; // Disable Next if no more results
+  } catch (error) {
+    toggleLoading(false);
+    console.error("Error fetching books:", error);
+  }
+}
 
 // Render Books
 function renderBooks(books) {
@@ -18,7 +45,9 @@ function renderBooks(books) {
     bookCard.setAttribute("data-id", book.id);
     bookCard.innerHTML = `
       <div class="card-action-wrapper">
-        <button class="btn btn-secondary wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <button class="btn btn-secondary wishlist-btn">
+          <i class="fa-regular fa-heart"></i>
+        </button>
       </div>
       <img
         src="${book.formats["image/jpeg"]}"
@@ -37,80 +66,40 @@ function renderBooks(books) {
       </div>
     `;
     bookWrapper.appendChild(bookCard);
-    prevBtn.disabled = currentPage === 1;
   });
 }
 
 // Filter Books
-async function filterBooks() {
+bookFilter.addEventListener("change", async () => {
+  currentPage = 1;
   const filterValue = bookFilter.value.toLowerCase();
-
-  // Show Loading
-  loadingIndicator.style.display = "block";
-
-  // Clear Books
-  bookWrapper.innerHTML = "";
-
-  // Filter Books
-  const baseUrl = `https://gutendex.com/books?topic=${filterValue}`;
-  const response = await fetch(baseUrl);
-  const data = await response.json();
-
-  loadingIndicator.style.display = "none";
-
-  renderBooks(data.results);
-}
-
-bookFilter.addEventListener("change", filterBooks);
+  await fetchBooks(currentPage, `&topic=${filterValue}`);
+});
 
 // Search Books
-searchForm.addEventListener("submit", (e) => {
+searchForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
+  currentPage = 1;
   const searchValue = searchInput.value.trim();
+  if (!searchValue) return;
 
-  if (!searchValue) {
-    return;
+  await fetchBooks(currentPage, `&search=${searchValue}`);
+});
+
+// Pagination: Previous and Next Buttons
+prevBtn.addEventListener("click", async () => {
+  if (currentPage > 1) {
+    currentPage--;
+    await fetchBooks(currentPage);
   }
+});
 
-  console.log(searchValue);
-
-  // Show Loading
-  loadingIndicator.style.display = "block";
-
-  // Clear Books
-  bookWrapper.innerHTML = "";
-
-  const baseUrl = `https://gutendex.com/books?search=${searchValue}`;
-  const response = fetch(baseUrl);
-  response
-    .then((response) => response.json())
-    .then((data) => {
-      loadingIndicator.style.display = "none";
-
-      renderBooks(data.results);
-    });
+nextBtn.addEventListener("click", async () => {
+  currentPage++;
+  await fetchBooks(currentPage);
 });
 
 // Add to Wishlist
-function addToWishlist(bookId, wishlistBtn) {
-  const existingWishlist = JSON.parse(localStorage.getItem("wishlists")) || [];
-
-  if (existingWishlist.includes(bookId)) {
-    // removed from local storange
-    const index = existingWishlist.indexOf(bookId);
-    existingWishlist.splice(index, 1);
-    localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
-
-    wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
-    return;
-  }
-
-  existingWishlist.push(bookId);
-  localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
-  wishlistBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
-}
-
 bookWrapper.addEventListener("click", (e) => {
   const addToWishlistBtn = e.target.closest(".wishlist-btn");
 
@@ -122,54 +111,27 @@ bookWrapper.addEventListener("click", (e) => {
   }
 });
 
-// Pagination
-prevBtn.addEventListener("click", async () => {
-  if (currentPage > 1) {
-    currentPage--;
+function addToWishlist(bookId, wishlistBtn) {
+  const existingWishlist = JSON.parse(localStorage.getItem("wishlists")) || [];
+
+  if (existingWishlist.includes(bookId)) {
+    // Remove from wishlist
+    const index = existingWishlist.indexOf(bookId);
+    existingWishlist.splice(index, 1);
+    localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
+
+    wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+  } else {
+    // Add to wishlist
+    existingWishlist.push(bookId);
+    localStorage.setItem("wishlists", JSON.stringify(existingWishlist));
+    wishlistBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
   }
+}
 
-  bookWrapper.innerHTML = "";
-
-  loadingIndicator.style.display = "block";
-
-  const response = await fetch(
-    `https://gutendex.com/books?page=${currentPage}`
-  );
-  const data = await response.json();
-
-  loadingIndicator.style.display = "none";
-
-  renderBooks(data.results);
-});
-
-nextBtn.addEventListener("click", async () => {
-  currentPage++;
-
-  bookWrapper.innerHTML = "";
-
-  loadingIndicator.style.display = "block";
-
-  const response = await fetch(
-    `https://gutendex.com/books?page=${currentPage}`
-  );
-  const data = await response.json();
-
-  loadingIndicator.style.display = "none";
-
-  renderBooks(data.results);
-});
-
-// Init App
+// Init App on Page Load
 async function init() {
-  loadingIndicator.style.display = "block";
-
-  const response = await fetch(
-    "https://gutendex.com/books?page=1&language=en&per_page=10"
-  );
-
-  const data = await response.json();
-  renderBooks(data.results);
-  loadingIndicator.style.display = "none";
+  await fetchBooks(currentPage);
 }
 
 init();
