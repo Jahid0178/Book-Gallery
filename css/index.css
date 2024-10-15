@@ -146,6 +146,12 @@ input {
   margin-bottom: 1rem;
 }
 
+.section-header #topic-filter {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.3rem;
+}
+
 /* Book Card */
 .book-card {
   padding: 0.5rem;
@@ -187,8 +193,18 @@ input {
 
 /* Loader */
 .loader {
-  text-align: center;
-  font-size: 1.2rem;
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #000 #0000;
+  animation: l1 1s infinite;
+  margin: 0 auto;
+}
+@keyframes l1 {
+  to {
+    transform: rotate(0.5turn);
+  }
 }
 
 /* Media Queries For Responsive */
