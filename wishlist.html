@@ -7,8 +7,62 @@
       content="width=device-width, initial-scale=1.0"
     />
     <title>Book Gallery | Wishlist</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="./css/index.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./css/wishlist.css"
+    />
   </head>
   <body>
-    <h1>Wishlist</h1>
+    <header>
+      <div class="container">
+        <nav class="header-nav">
+          <a href="/index.html">
+            <h3>Books Gallery</h3>
+          </a>
+          <ul class="header-nav-ul">
+            <li>
+              <a href="/index.html">Home</a>
+            </li>
+            <li>
+              <a href="/wishlist.html">Wishlist</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <section>
+          <h1>Wishlist</h1>
+
+          <div class="wishlist-wrapper"></div>
+          <!-- Loader -->
+          <div
+            class="loader"
+            style="display: none"
+            id="loader"
+          >
+            Books Loading...
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Script -->
+    <script
+      src="./js/wishlist.js"
+      defer
+    ></script>
   </body>
 </html>
