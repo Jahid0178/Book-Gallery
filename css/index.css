@@ -211,6 +211,11 @@ input {
   text-align: center;
 }
 
+.pagination button {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
 /* Loader */
 .loader {
   width: 50px;
