@@ -15,22 +15,18 @@ function toggleLoading(show) {
 // Reusable function to fetch and render books
 async function fetchBooks(page = 1, query = "") {
   try {
-    // Show loading indicator and clear the previous books
     toggleLoading(true);
     bookWrapper.innerHTML = "";
 
-    // Fetch data from API
     const baseUrl = `https://gutendex.com/books?page=${page}${query}`;
     const response = await fetch(baseUrl);
     const data = await response.json();
 
-    // Hide loading indicator and render books
     toggleLoading(false);
     renderBooks(data.results);
 
-    // Enable/Disable buttons based on the current page
     prevBtn.disabled = page === 1;
-    nextBtn.disabled = data.results.length === 0; // Disable Next if no more results
+    nextBtn.disabled = data.results.length === 0;
   } catch (error) {
     toggleLoading(false);
     console.error("Error fetching books:", error);
@@ -39,14 +35,23 @@ async function fetchBooks(page = 1, query = "") {
 
 // Render Books
 function renderBooks(books) {
+  const existingWishlist = JSON.parse(localStorage.getItem("wishlists")) || [];
+
   books.forEach((book) => {
     const bookCard = document.createElement("div");
     bookCard.classList.add("book-card");
     bookCard.setAttribute("data-id", book.id);
+
+    // Check if the book is in the wishlist and set the appropriate icon
+    const isInWishlist = existingWishlist.includes(book.id.toString());
+    const heartIconClass = isInWishlist
+      ? "fa-solid fa-heart"
+      : "fa-regular fa-heart";
+
     bookCard.innerHTML = `
       <div class="card-action-wrapper">
         <button class="btn btn-secondary wishlist-btn">
-          <i class="fa-regular fa-heart"></i>
+          <i class="${heartIconClass}"></i>
         </button>
       </div>
       <img
