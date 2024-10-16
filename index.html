@@ -31,19 +31,12 @@
             id="search-form"
           >
             <input
-              type="text"
+              type="search"
               name="search"
               id="search-input"
               placeholder="Search..."
               class="search-input"
             />
-            <button
-              id="search-btn"
-              class="search-btn"
-              type="submit"
-            >
-              Search Book
-            </button>
           </form>
           <ul class="header-nav-ul">
             <li>
@@ -66,11 +59,16 @@
               name="topic"
               id="topic-filter"
             >
+              <option value="">All</option>
               <option value="science">Science</option>
               <option value="fantasy">Fantasy</option>
               <option value="romance">Romance</option>
               <option value="children">Children</option>
               <option value="adult">Adult</option>
+              <option value="fiction">Fiction</option>
+              <option value="literature">Literature</option>
+              <option value="biography">Biography</option>
+              <option value="history">History</option>
             </select>
           </div>
           <div class="books-list-wrapper"></div>

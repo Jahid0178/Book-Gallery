@@ -8,6 +8,18 @@ const nextBtn = document.querySelector("#next-btn");
 
 let currentPage = 1;
 
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    console.log("timeout", timeoutId);
+    console.log("args", args);
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
+
 function toggleLoading(show) {
   loadingIndicator.style.display = show ? "block" : "none";
 }
@@ -78,18 +90,24 @@ function renderBooks(books) {
 bookFilter.addEventListener("change", async () => {
   currentPage = 1;
   const filterValue = bookFilter.value.toLowerCase();
+  localStorage.setItem("filter", filterValue) || "";
   await fetchBooks(currentPage, `&topic=${filterValue}`);
 });
 
 // Search Books
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  currentPage = 1;
-  const searchValue = searchInput.value.trim();
-  if (!searchValue) return;
+searchInput.addEventListener(
+  "input",
+  debounce(async (e) => {
+    currentPage = 1;
 
-  await fetchBooks(currentPage, `&search=${searchValue}`);
-});
+    const searchValue = e.target.value.trim();
+
+    // Store the search value in local storage
+    localStorage.setItem("search", searchValue) || "";
+
+    await fetchBooks(currentPage, `&search=${searchValue}`);
+  }, 1000)
+);
 
 // Pagination: Previous and Next Buttons
 prevBtn.addEventListener("click", async () => {
@@ -136,7 +154,27 @@ function addToWishlist(bookId, wishlistBtn) {
 
 // Init App on Page Load
 async function init() {
-  await fetchBooks(currentPage);
+  console.log("init");
+  const filterValue = localStorage.getItem("filter");
+  const searchValue = localStorage.getItem("search");
+
+  let queryParams = {};
+
+  if (filterValue) {
+    queryParams["topic"] = filterValue;
+    bookFilter.value = filterValue;
+  }
+
+  if (searchValue) {
+    queryParams["search"] = searchValue;
+    searchInput.value = searchValue;
+  }
+
+  const queryString = Object.keys(queryParams)
+    .map((key) => `${key}=${queryParams[key]}`)
+    .join("&");
+
+  await fetchBooks(currentPage, queryString ? `&${queryString}` : "");
 }
 
 init();
